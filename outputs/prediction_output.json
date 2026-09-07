@@ -1,0 +1,50 @@
+{
+  "election": "West Bengal Assembly 2026",
+  "total_seats": 294,
+  "majority": 148,
+  "interval_pct": 80,
+  "dataset_used": "dataset_1",
+  "alliances": [
+    {
+      "alliance": "TMC+",
+      "role": "DOMINANT",
+      "n_agencies": 3,
+      "raw_median": 135.0,
+      "bias_correction": 44.1,
+      "point_estimate": 199,
+      "interval_lo": 65,
+      "interval_hi": 326,
+      "confidence": 0.746
+    },
+    {
+      "alliance": "BJP+",
+      "role": "BJP_FAMILY",
+      "n_agencies": 3,
+      "raw_median": 153.0,
+      "bias_correction": -67.7,
+      "point_estimate": 94,
+      "interval_lo": 0,
+      "interval_hi": 326,
+      "confidence": 0.737
+    },
+    {
+      "alliance": "OTHERS+",
+      "role": "OTHERS",
+      "n_agencies": 3,
+      "raw_median": 8.0,
+      "bias_correction": -6.6,
+      "point_estimate": 1,
+      "interval_lo": 0,
+      "interval_hi": 43,
+      "confidence": 0.871
+    }
+  ],
+  "summary": {
+    "likely_winner": "TMC+",
+    "point_estimate": 199,
+    "interval_lo": 65,
+    "interval_hi": 326,
+    "majority_likely": true
+  },
+  "ai_prompt": "You are an election analyst covering the 2026 West Bengal Assembly election.\n\nAnalyze recent political sentiment based on general knowledge and trends.\n\nAlliances and their current statistical seat estimates:\n{\n  \"TMC+\": 199,\n  \"BJP+\": 94,\n  \"OTHERS+\": 1\n}\n\nRoles:\n{\n  \"TMC+\": \"DOMINANT\",\n  \"BJP+\": \"BJP_FAMILY\",\n  \"OTHERS+\": \"OTHERS\"\n}\n\nFor each alliance, provide a sentiment score between -1.0 (very negative) and +1.0 (very positive) based on:\n- Recent news and political developments\n- Public mood and anti-incumbency factors\n- Campaign momentum and ground-level reports\n- Any major controversies or advantages\n\nReturn ONLY valid JSON in this EXACT format (no extra text, no markdown, no explanation):\n\n{\n  \"TMC+\": {\n    \"sentiment_score\": 0.0,\n    \"reasoning\": \"one-line summary of sentiment drivers\",\n    \"key_factors\": [\"factor 1\", \"factor 2\", \"factor 3\"]\n  },\n  \"BJP+\": {\n    \"sentiment_score\": 0.0,\n    \"reasoning\": \"one-line summary of sentiment drivers\",\n    \"key_factors\": [\"factor 1\", \"factor 2\", \"factor 3\"]\n  },\n  \"OTHERS+\": {\n    \"sentiment_score\": 0.0,\n    \"reasoning\": \"one-line summary of sentiment drivers\",\n    \"key_factors\": [\"factor 1\", \"factor 2\", \"factor 3\"]\n  }\n}\n\nIMPORTANT:\n- sentiment_score must be a number between -1.0 and +1.0\n- Positive score = party is doing better than expected\n- Negative score = party is doing worse than expected\n- Include ALL 3 alliances: TMC+, BJP+, OTHERS+\n- Return ONLY the JSON, nothing else"
+}

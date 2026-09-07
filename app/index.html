@@ -1,0 +1,531 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>ElectionForecaster - unified dashboard</title>
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;900&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="/static/styles.css" />
+    
+    <script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "on-primary-fixed-variant": "#003ea8",
+                        "inverse-primary": "#0053db",
+                        "error": "#ffb4ab",
+                        "on-tertiary-fixed": "#360f00",
+                        "secondary-fixed-dim": "#d2bbff",
+                        "on-primary-container": "#eeefff",
+                        "inverse-on-surface": "#2e3039",
+                        "surface": "#11131b",
+                        "tertiary-fixed": "#ffdbcd",
+                        "on-surface-variant": "#c3c6d7",
+                        "on-secondary-container": "#c9aeff",
+                        "on-primary": "#002a78",
+                        "on-secondary-fixed-variant": "#5a00c6",
+                        "outline-variant": "#434655",
+                        "secondary-fixed": "#eaddff",
+                        "primary-container": "#2563eb",
+                        "on-error-container": "#ffdad6",
+                        "surface-container-high": "#282a32",
+                        "primary-fixed-dim": "#b4c5ff",
+                        "on-tertiary-container": "#ffede6",
+                        "surface-variant": "#32343d",
+                        "on-secondary": "#3f008e",
+                        "on-error": "#690005",
+                        "surface-bright": "#373942",
+                        "tertiary": "#ffb596",
+                        "surface-container-highest": "#32343d",
+                        "error-container": "#93000a",
+                        "secondary-container": "#6001d1",
+                        "on-primary-fixed": "#00174b",
+                        "primary": "#b4c5ff",
+                        "secondary": "#d2bbff",
+                        "surface-container": "#1d1f27",
+                        "surface-container-low": "#191b23",
+                        "surface-container-lowest": "#0c0e16",
+                        "inverse-surface": "#e1e2ed",
+                        "tertiary-fixed-dim": "#ffb596",
+                        "on-tertiary": "#581e00",
+                        "on-surface": "#e1e2ed",
+                        "tertiary-container": "#bc4800",
+                        "on-tertiary-fixed-variant": "#7d2d00",
+                        "background": "#11131b",
+                        "on-background": "#e1e2ed",
+                        "outline": "#8d90a0",
+                        "on-secondary-fixed": "#25005a",
+                        "surface-dim": "#11131b",
+                        "surface-tint": "#b4c5ff",
+                        "primary-fixed": "#dbe1ff"
+                    },
+                    borderRadius: {
+                        "DEFAULT": "0.125rem",
+                        "lg": "0.25rem",
+                        "xl": "0.5rem",
+                        "full": "0.75rem"
+                    },
+                    spacing: {
+                        "unit": "4px",
+                        "table-row-height": "40px",
+                        "container-padding": "24px",
+                        "gutter": "16px",
+                        "sidebar-width": "260px",
+                        "card-padding": "20px"
+                    },
+                    fontFamily: {
+                        "h3": ["Inter"],
+                        "data-lg": ["Space Grotesk"],
+                        "data-md": ["Space Grotesk"],
+                        "label-caps": ["Space Grotesk"],
+                        "body-sm": ["Inter"],
+                        "h1": ["Inter"],
+                        "h2": ["Inter"],
+                        "body-md": ["Inter"]
+                    },
+                    fontSize: {
+                        "h3": ["18px", { lineHeight: "1.4", letterSpacing: "0", fontWeight: "600" }],
+                        "data-lg": ["20px", { lineHeight: "1", letterSpacing: "-0.02em", fontWeight: "600" }],
+                        "data-md": ["14px", { lineHeight: "1", letterSpacing: "0", fontWeight: "500" }],
+                        "label-caps": ["11px", { lineHeight: "1", letterSpacing: "0.08em", fontWeight: "700" }],
+                        "body-sm": ["12px", { lineHeight: "1.5", letterSpacing: "0", fontWeight: "400" }],
+                        "h1": ["32px", { lineHeight: "1.2", letterSpacing: "-0.02em", fontWeight: "700" }],
+                        "h2": ["24px", { lineHeight: "1.3", letterSpacing: "-0.01em", fontWeight: "600" }],
+                        "body-md": ["14px", { lineHeight: "1.5", letterSpacing: "0", fontWeight: "400" }]
+                    }
+                }
+            }
+        }
+    </script>
+</head>
+<body class="bg-background text-on-background font-body-md text-body-md antialiased h-screen overflow-hidden flex selection:bg-primary-container selection:text-on-primary-container">
+
+<!-- SideNavBar (Shared Component) -->
+<nav class="fixed left-0 top-0 h-screen w-[260px] border-r border-slate-800 bg-slate-900 font-['Inter'] antialiased tracking-tight flex flex-col py-6 z-50">
+    <!-- Brand/Header -->
+    <div class="px-6 mb-8 flex items-center gap-3">
+        <div class="w-8 h-8 rounded bg-primary-container flex items-center justify-center">
+            <span class="material-symbols-outlined text-on-primary-container text-[20px]" data-weight="fill">analytics</span>
+        </div>
+        <div>
+            <h1 class="text-lg font-black tracking-tighter text-white uppercase mb-1">ElectionForecaster</h1>
+            <div class="flex items-center gap-2 text-emerald-500 font-body-sm text-body-sm">
+                <span class="relative flex h-2 w-2">
+                    <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+                    <span class="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
+                </span>
+                <span class="font-label-caps text-label-caps uppercase tracking-widest">Live: Node Active</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Navigation Links -->
+    <ul class="flex flex-col flex-grow gap-1 px-4 overflow-y-auto">
+        <li>
+            <a href="#" data-target="view-overview" class="nav-link flex items-center gap-3 px-3 py-2 rounded-DEFAULT bg-slate-800 text-white border-l-4 border-blue-600 opacity-90 scale-[0.99] transition-colors duration-150">
+                <span class="material-symbols-outlined" data-icon="dashboard" data-weight="fill" style="font-variation-settings: 'FILL' 1;">dashboard</span>
+                <span class="font-body-md text-body-md font-semibold">Overview</span>
+            </a>
+        </li>
+        <li>
+            <a href="#" data-target="view-data-manager" class="nav-link flex items-center gap-3 px-3 py-2 rounded-DEFAULT text-slate-400 hover:text-slate-200 hover:bg-slate-800/50 transition-colors duration-150 border-l-4 border-transparent">
+                <span class="material-symbols-outlined" data-icon="database">database</span>
+                <span class="font-body-md text-body-md">Data Manager</span>
+            </a>
+        </li>
+        <li>
+            <a href="#" data-target="view-statistical-results" class="nav-link flex items-center gap-3 px-3 py-2 rounded-DEFAULT text-slate-400 hover:text-slate-200 hover:bg-slate-800/50 transition-colors duration-150 border-l-4 border-transparent">
+                <span class="material-symbols-outlined" data-icon="query_stats">query_stats</span>
+                <span class="font-body-md text-body-md">Forecasting</span>
+            </a>
+        </li>
+        <li>
+            <a href="#" data-target="view-ai-integration" class="nav-link flex items-center gap-3 px-3 py-2 rounded-DEFAULT text-slate-400 hover:text-slate-200 hover:bg-slate-800/50 transition-colors duration-150 border-l-4 border-transparent">
+                <span class="material-symbols-outlined" data-icon="science">science</span>
+                <span class="font-body-md text-body-md">AI Scenarios</span>
+            </a>
+        </li>
+        <li>
+            <a href="#" data-target="view-final-forecast" class="nav-link flex items-center gap-3 px-3 py-2 rounded-DEFAULT text-slate-400 hover:text-slate-200 hover:bg-slate-800/50 transition-colors duration-150 border-l-4 border-transparent">
+                <span class="material-symbols-outlined" data-icon="psychology">psychology</span>
+                <span class="font-body-md text-body-md">Final Forecast</span>
+            </a>
+        </li>
+        <li>
+            <a href="#" data-target="view-settings" class="nav-link flex items-center gap-3 px-3 py-2 rounded-DEFAULT text-slate-400 hover:text-slate-200 hover:bg-slate-800/50 transition-colors duration-150 border-l-4 border-transparent">
+                <span class="material-symbols-outlined" data-icon="settings">settings</span>
+                <span class="font-body-md text-body-md">Settings</span>
+            </a>
+        </li>
+    </ul>
+
+
+
+    <!-- Footer / CTA -->
+    <div class="px-4 mt-auto">
+        <button class="w-full mb-4 bg-gradient-to-r from-primary-container to-blue-700 hover:brightness-110 text-white py-2 px-4 rounded-DEFAULT font-body-sm text-body-sm font-semibold flex items-center justify-center gap-2 transition-all border border-blue-600/50 shadow-[0_0_15px_rgba(37,99,235,0.2)]">
+            <span class="material-symbols-outlined text-sm" data-icon="download">download</span>
+            Export Report
+        </button>
+        <div class="border-t border-slate-800 pt-4 flex flex-col gap-1">
+            <a href="#" class="flex items-center gap-3 px-3 py-2 rounded-DEFAULT text-slate-400 hover:text-slate-200 hover:bg-slate-800/50 transition-colors duration-150">
+                <span class="material-symbols-outlined" data-icon="help">help</span>
+                <span class="font-body-sm text-body-sm">Support</span>
+            </a>
+        </div>
+    </div>
+</nav>
+
+<!-- Main Content Canvas -->
+<div class="flex-1 flex flex-col ml-[260px] h-screen bg-background relative w-[calc(100%-260px)]">
+    <!-- TopNavBar (Shared Component) -->
+    <header class="flex justify-between items-center h-14 px-6 w-full docked full-width top-0 sticky z-40 bg-slate-950/80 backdrop-blur-md border-b border-slate-800">
+        <!-- Left: Search/Brand -->
+        <div class="flex items-center gap-8 h-full">
+            <span class="text-blue-500 font-bold tracking-tighter font-['Inter'] text-sm uppercase tracking-widest">Analytic Terminal v4.2</span>
+
+        </div>
+
+        <!-- Right: Actions -->
+        <div class="flex items-center gap-4">
+            <div class="flex items-center gap-2 border-r border-slate-800 pr-4">
+                <button class="text-slate-500 hover:text-blue-400 transition-all cursor-pointer active:scale-95 p-1"><span class="material-symbols-outlined text-[20px]" data-icon="notifications">notifications</span></button>
+                <button class="text-slate-500 hover:text-blue-400 transition-all cursor-pointer active:scale-95 p-1"><span class="material-symbols-outlined text-[20px]" data-icon="history">history</span></button>
+                <button class="text-slate-500 hover:text-blue-400 transition-all cursor-pointer active:scale-95 p-1"><span class="material-symbols-outlined text-[20px]" data-icon="terminal">terminal</span></button>
+            </div>
+
+        </div>
+    </header>
+
+    <!-- Main Views Container -->
+    <main class="flex-1 overflow-y-auto p-container-padding">
+        <div class="max-w-[1400px] mx-auto">
+            
+            <div id="view-overview" class="dashboard-view">
+                <iframe src="/static/overview.html" class="w-full h-[1800px] border-0" scrolling="no"></iframe>
+            </div>
+
+            <!-- VIEW: Data Manager -->
+            <div id="view-data-manager" class="dashboard-view hidden space-y-gutter">
+                <div class="mb-8">
+                    <h1 class="font-h1 text-h1 text-on-surface mb-2">Election Prediction Engine</h1>
+                    <p class="font-h3 text-h3 text-on-surface-variant font-normal">Statistical + AI-Augmented Exit Poll Forecast</p>
+                </div>
+                
+                <div class="mb-4">
+                    <h2 class="font-h3 text-h3 text-on-surface flex items-center gap-2 mb-2">
+                        <span class="material-symbols-outlined text-tertiary" data-icon="how_to_vote">how_to_vote</span>
+                        Select Exit Poll Data Source
+                    </h2>
+                    <p class="font-body-sm text-body-sm text-on-surface-variant">Choose a specific exit poll dataset to run the statistical and AI prediction models.</p>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-4" id="poll-selection-grid">
+                    <button class="poll-select-btn relative text-left bg-surface-container border-2 border-outline-variant rounded-lg p-5 hover:border-blue-500/50 hover:bg-surface-container-high transition-all focus:outline-none group" data-poll="dataset_1">
+                        <div class="absolute top-4 right-4 w-4 h-4 rounded-full border-2 border-slate-500 group-[.selected]:border-blue-500 group-[.selected]:bg-blue-500 flex items-center justify-center">
+                            <div class="w-1.5 h-1.5 rounded-full bg-white opacity-0 group-[.selected]:opacity-100"></div>
+                        </div>
+                        <h3 class="font-bold text-white mb-1 text-lg">DATASET 1</h3>
+                        <p class="text-xs text-slate-400">Large sample size with comprehensive demographic weighting.</p>
+                    </button>
+                    
+                    <button class="poll-select-btn relative text-left bg-surface-container border-2 border-outline-variant rounded-lg p-5 hover:border-blue-500/50 hover:bg-surface-container-high transition-all focus:outline-none group" data-poll="dataset_2">
+                        <div class="absolute top-4 right-4 w-4 h-4 rounded-full border-2 border-slate-500 group-[.selected]:border-blue-500 group-[.selected]:bg-blue-500 flex items-center justify-center">
+                            <div class="w-1.5 h-1.5 rounded-full bg-white opacity-0 group-[.selected]:opacity-100"></div>
+                        </div>
+                        <h3 class="font-bold text-white mb-1 text-lg">DATASET 2</h3>
+                        <p class="text-xs text-slate-400">Focuses heavily on regional swing factors and local leadership.</p>
+                    </button>
+                    
+                    <button class="poll-select-btn relative text-left bg-surface-container border-2 border-outline-variant rounded-lg p-5 hover:border-blue-500/50 hover:bg-surface-container-high transition-all focus:outline-none group" data-poll="dataset_3">
+                        <div class="absolute top-4 right-4 w-4 h-4 rounded-full border-2 border-slate-500 group-[.selected]:border-blue-500 group-[.selected]:bg-blue-500 flex items-center justify-center">
+                            <div class="w-1.5 h-1.5 rounded-full bg-white opacity-0 group-[.selected]:opacity-100"></div>
+                        </div>
+                        <h3 class="font-bold text-white mb-1 text-lg">DATASET 3</h3>
+                        <p class="text-xs text-slate-400">Historically accurate in predicting landslide margins.</p>
+                    </button>
+                </div>
+
+                <div class="flex justify-end pt-4 pb-8 border-b border-surface-variant">
+                    <button id="start-prediction-btn" class="flex items-center gap-2 px-6 py-3 bg-surface-variant text-on-surface-variant rounded-lg font-h3 text-h3 opacity-50 cursor-not-allowed transition-all" disabled>
+                        <span class="material-symbols-outlined" data-icon="play_circle">play_circle</span>
+                        Start Model Prediction
+                    </button>
+                </div>
+
+                <div>
+                    <h2 class="font-label-caps text-label-caps text-on-surface-variant uppercase mb-4 tracking-widest">Prediction Preview Canvas</h2>
+                    <div class="h-96 border border-surface-variant bg-surface-container-low rounded-xl flex flex-col items-center justify-center relative overflow-hidden">
+                        <div class="absolute inset-0 opacity-[0.03]" style="background-image: radial-gradient(#fff 1px, transparent 1px); background-size: 24px 24px;"></div>
+                        <div class="relative z-10 w-full max-w-lg flex flex-col items-center">
+                            <div class="flex items-end justify-center gap-2 h-32 mb-8 opacity-20 w-full">
+                                <div class="w-8 bg-primary rounded-t-sm" style="height: 20%;"></div>
+                                <div class="w-8 bg-secondary rounded-t-sm" style="height: 45%;"></div>
+                                <div class="w-8 bg-primary rounded-t-sm" style="height: 30%;"></div>
+                                <div class="w-8 bg-tertiary rounded-t-sm" style="height: 85%;"></div>
+                                <div class="w-8 bg-secondary rounded-t-sm" style="height: 60%;"></div>
+                                <div class="w-8 bg-primary rounded-t-sm" style="height: 40%;"></div>
+                            </div>
+                            <div class="w-16 h-16 rounded-full bg-surface-variant border border-outline-variant flex items-center justify-center mb-4 shadow-[0_0_30px_rgba(0,0,0,0.5)]">
+                                <span class="material-symbols-outlined text-outline-variant text-[32px]" data-icon="analytics">analytics</span>
+                            </div>
+                            <h3 class="font-h2 text-h2 text-on-surface-variant mb-2">Awaiting Data Ingestion</h3>
+                            <p class="font-body-md text-body-md text-outline text-center max-w-md">
+                                The prediction engine requires exit poll data to initiate the Monte Carlo simulations and generate geospatial confidence intervals.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- VIEW: Statistical Results -->
+            <div id="view-statistical-results" class="dashboard-view hidden flex flex-col gap-gutter">
+                <div class="flex justify-between items-end mb-4">
+                    <div>
+                        <h2 class="font-h1 text-h1 text-on-surface mb-1">Stage 1: Statistical Prediction</h2>
+                        <p class="font-body-md text-body-md text-on-surface-variant flex items-center gap-2">
+                            <span>Current Pipeline Status:</span>
+                            <span class="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-sm bg-primary-container/20 text-primary border border-primary-container/30 font-label-caps text-label-caps">
+                                <span class="relative flex h-1.5 w-1.5">
+                                    <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-primary opacity-75"></span>
+                                    <span class="relative inline-flex rounded-full h-1.5 w-1.5 bg-primary"></span>
+                                </span>
+                                Prediction Ready
+                            </span>
+                        </p>
+                    </div>
+                    <div class="text-right">
+                        <p class="font-label-caps text-label-caps text-on-surface-variant uppercase">Model Version</p>
+                        <p class="font-data-md text-data-md text-on-surface">v4.2.1-gamma</p>
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-12 gap-gutter">
+                    <!-- Output Table -->
+                    <div class="col-span-12 xl:col-span-8 bg-surface-container border border-surface-variant rounded-lg overflow-hidden flex flex-col shadow-[0_4px_24px_rgba(0,0,0,0.2)]">
+                        <div class="px-card-padding py-4 border-b border-surface-variant bg-surface-container-low flex justify-between items-center">
+                            <h3 class="font-h3 text-h3 text-on-surface flex items-center gap-2">
+                                <span class="material-symbols-outlined text-primary" data-icon="table_chart">table_chart</span>
+                                Prediction Output
+                            </h3>
+                            <div class="flex gap-2">
+                                <button class="p-1.5 text-on-surface-variant hover:text-on-surface hover:bg-surface-variant rounded-DEFAULT transition-colors">
+                                    <span class="material-symbols-outlined text-sm" data-icon="filter_list">filter_list</span>
+                                </button>
+                                <button class="p-1.5 text-on-surface-variant hover:text-on-surface hover:bg-surface-variant rounded-DEFAULT transition-colors">
+                                    <span class="material-symbols-outlined text-sm" data-icon="more_vert">more_vert</span>
+                                </button>
+                            </div>
+                        </div>
+                        <div class="overflow-x-auto p-4">
+                            <table class="w-full text-left border-collapse">
+                                <thead>
+                                    <tr class="border-b border-surface-variant font-label-caps text-label-caps text-on-surface-variant uppercase tracking-wider">
+                                        <th class="py-3 px-4 font-semibold w-1/4">Alliance</th>
+                                        <th class="py-3 px-4 font-semibold w-1/6 text-right">Mean Prediction<br><span class="text-[9px] opacity-70">(Seats)</span></th>
+                                        <th class="py-3 px-4 font-semibold w-1/6 text-right">Adjusted<br><span class="text-[9px] opacity-70">(+ Alpha)</span></th>
+                                        <th class="py-3 px-4 font-semibold w-1/4">Range (Min-Max)</th>
+                                        <th class="py-3 px-4 font-semibold w-1/6 text-right">Confidence</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="statistical-results-table" class="font-data-md text-data-md">
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                    <!-- Prompt Box -->
+                    <div class="col-span-12 xl:col-span-4 flex flex-col gap-gutter">
+                        <div class="bg-surface-container border border-surface-variant rounded-lg p-card-padding flex-grow flex flex-col relative overflow-hidden">
+                            <div class="absolute -top-10 -right-10 w-32 h-32 bg-primary/10 rounded-full blur-2xl pointer-events-none"></div>
+                            <h3 class="font-h3 text-h3 text-on-surface mb-2 flex items-center gap-2">
+                                <span class="material-symbols-outlined text-secondary" data-icon="smart_toy">smart_toy</span>
+                                LLM Analysis Prompt
+                            </h3>
+                            <p class="font-body-sm text-body-sm text-on-surface-variant mb-4">Copy this prompt and paste into ChatGPT for qualitative analysis and reporting.</p>
+                            <div class="bg-[#0b0d14] border border-[#1e2230] rounded-DEFAULT p-4 flex-grow relative group font-mono text-[11px] leading-relaxed text-[#8a91a6] overflow-y-auto max-h-[250px] scrollbar-thin scrollbar-thumb-surface-variant scrollbar-track-transparent">
+                                <button class="absolute top-2 right-2 bg-surface-container hover:bg-surface-variant text-on-surface border border-surface-variant p-1.5 rounded-DEFAULT transition-all opacity-0 group-hover:opacity-100 flex items-center gap-1 active:scale-95" title="Copy to Clipboard">
+                                    <span class="material-symbols-outlined text-[14px]" data-icon="content_copy">content_copy</span>
+                                    <span class="font-body-sm text-[10px] uppercase pr-1">Copy</span>
+                                </button>
+                                <pre id="ai-prompt-box" class="whitespace-pre-wrap text-[#c9aeff] text-center italic mt-10">Select a dataset and run prediction to generate AI Prompt.</pre>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- VIEW: AI Integration -->
+            <div id="view-ai-integration" class="dashboard-view hidden flex flex-col gap-gutter">
+                <div class="flex justify-between items-end border-b border-surface-variant pb-4 mb-2">
+                    <div>
+                        <h2 class="font-h2 text-h2 text-on-surface mb-1">Stage 2: External AI Interaction</h2>
+                        <p class="font-body-md text-body-md text-on-surface-variant">Inject external sentiment analysis into the predictive model.</p>
+                    </div>
+                    <div class="flex items-center gap-2">
+                        <span class="font-label-caps text-label-caps text-outline uppercase">Session ID:</span>
+                        <span class="font-data-md text-data-md text-primary">#FX-8992-AI</span>
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-12 gap-gutter flex-1">
+                    <div class="col-span-12 xl:col-span-12 flex flex-col gap-gutter">
+                        <div class="bg-surface border border-surface-variant rounded-lg flex flex-col h-full relative overflow-hidden group">
+                            <div class="h-1 w-full bg-gradient-to-r from-primary-container via-secondary-container to-surface absolute top-0 left-0"></div>
+                            <div class="p-card-padding border-b border-surface-variant flex justify-between items-center bg-surface-container-low">
+                                <div class="flex items-center gap-3">
+                                    <span class="material-symbols-outlined text-primary text-[24px]">api</span>
+                                    <div>
+                                        <h3 class="font-h3 text-h3 text-on-surface">Section 5: AI Response Input</h3>
+                                        <p class="font-body-sm text-body-sm text-outline">Paste the structured JSON response from the external LLM agent here.</p>
+                                    </div>
+                                </div>
+                                <div class="flex items-center gap-2 bg-emerald-500/10 border border-emerald-500/30 px-3 py-1.5 rounded">
+                                    <span class="material-symbols-outlined text-[16px] text-emerald-400">check_circle</span>
+                                    <span class="font-label-caps text-label-caps text-emerald-400 uppercase tracking-widest">Valid JSON Detected</span>
+                                </div>
+                            </div>
+                            
+                            <div class="flex-1 p-4 bg-[#0a0c10] relative font-mono text-sm min-h-[300px]">
+                                <div class="absolute left-0 top-0 bottom-0 w-10 bg-[#0d0f14] border-r border-surface-variant flex flex-col items-end pr-2 pt-4 text-outline-variant select-none pointer-events-none">
+                                    <span>1</span><span>2</span><span>3</span><span>4</span><span>5</span><span>6</span><span>7</span><span>8</span><span>9</span><span>10</span><span>11</span><span>12</span>
+                                </div>
+                                <textarea id="ai-json-input" class="w-full h-full pl-10 bg-transparent border-none focus:ring-0 text-primary-fixed font-data-md text-data-md resize-none font-mono tracking-tight leading-relaxed" spellcheck="false"></textarea>
+                                <div class="absolute bottom-4 right-4 bg-surface border border-surface-variant p-3 rounded shadow-lg max-w-xs flex items-start gap-3">
+                                    <span class="material-symbols-outlined text-secondary text-[20px] mt-0.5">info</span>
+                                    <div>
+                                        <h4 class="font-label-caps text-label-caps text-on-surface uppercase mb-1">Sentiment Score</h4>
+                                        <p class="font-body-sm text-body-sm text-on-surface-variant">Values range from -1.0 to 1.0. A positive score (>0) indicates a favorable shift, which will be added as a swing modifier to the baseline model.</p>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="p-card-padding border-t border-surface-variant bg-surface-container-lowest flex justify-between items-center">
+                                <div class="flex items-center gap-2 text-outline">
+                                    <span class="material-symbols-outlined text-[18px]">sync</span>
+                                    <span class="font-body-sm text-body-sm">Last validated: Just now</span>
+                                </div>
+                                <button id="apply-ai-btn" class="bg-primary-container text-on-primary-container hover:bg-inverse-primary font-label-caps text-label-caps uppercase px-6 py-2.5 rounded transition-all flex items-center gap-2 shadow-[0_0_15px_rgba(37,99,235,0.1)]">
+                                    <span class="material-symbols-outlined text-[18px]">play_arrow</span>
+                                    Apply AI Swing Adjustment
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- VIEW: Final Forecast -->
+            <div id="view-final-forecast" class="dashboard-view hidden space-y-gutter">
+                <div class="mb-8">
+                    <p class="text-blue-400 font-label-caps text-label-caps uppercase mb-2 flex items-center gap-2">
+                        <span class="material-symbols-outlined text-sm">psychology</span>
+                        Stage 3 Complete
+                    </p>
+                    <h2 class="font-h1 text-h1 text-white">Final AI-Augmented Prediction</h2>
+                    <p class="font-body-md text-body-md text-slate-400 mt-2">Integrating demographic sentiment shifts and real-time news anomalies into the base statistical model.</p>
+                </div>
+                
+                <div class="grid grid-cols-12 gap-gutter">
+                    <!-- Hero Card: Most Likely Winner -->
+                    <div id="final-forecast-hero" class="col-span-12 lg:col-span-12 bg-surface-container-low border border-outline-variant rounded-lg p-card-padding relative overflow-hidden group">
+                        <div class="absolute -right-20 -top-20 w-64 h-64 bg-primary-container/10 rounded-full blur-3xl group-hover:bg-primary-container/20 transition-all duration-700"></div>
+                        <div class="flex justify-between items-start relative z-10 border-b border-outline-variant pb-4 mb-6">
+                            <h3 class="font-h2 text-h2 text-white">Most Likely Winner</h3>
+                            <div class="bg-[#1e293b] border border-[#334155] px-3 py-1 rounded-full flex items-center gap-2">
+                                <span class="w-2 h-2 rounded-full bg-green-500 animate-pulse"></span>
+                                <span class="font-label-caps text-label-caps text-slate-300">High Confidence</span>
+                            </div>
+                        </div>
+                        <div class="flex flex-col md:flex-row items-center gap-8 z-10 relative">
+                            <div class="w-32 h-32 rounded-xl bg-gradient-to-br from-blue-900 to-slate-900 border-2 border-blue-500/30 flex items-center justify-center shadow-[0_0_30px_rgba(37,99,235,0.2)]">
+                                <span class="material-symbols-outlined text-6xl text-blue-400">assured_workload</span>
+                            </div>
+                            <div class="flex-1 text-center md:text-left">
+                                <h1 class="text-5xl font-black text-white tracking-tighter mb-2" id="final-winner-name">-</h1>
+                                <p class="text-slate-400 font-body-md text-body-md mb-6" id="final-winner-status">Awaiting AI input...</p>
+                                <div class="flex items-end gap-4 justify-center md:justify-start">
+                                    <div class="bg-surface-container border border-outline-variant rounded-DEFAULT p-4 w-40 text-center md:text-left">
+                                        <p class="font-label-caps text-label-caps text-slate-500 mb-1">Confidence Score</p>
+                                        <p class="font-data-lg text-data-lg text-white text-3xl">-<span class="text-slate-500 text-xl">%</span></p>
+                                    </div>
+                                    <div class="bg-surface-container border border-outline-variant rounded-DEFAULT p-4 w-40 text-center md:text-left">
+                                        <p class="font-label-caps text-label-caps text-slate-500 mb-1">Projected Seats</p>
+                                        <p class="font-data-lg text-data-lg text-white text-3xl">-</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+
+                    <!-- Visualization -->
+                    <div class="col-span-12 bg-surface-container-low border border-outline-variant rounded-lg p-card-padding">
+                        <div class="border-b border-outline-variant pb-4 mb-6 flex justify-between items-end">
+                            <div>
+                                <h3 class="font-h3 text-h3 text-white mb-1">Prediction Variance Analysis</h3>
+                                <p class="font-body-sm text-body-sm text-slate-400">Base Statistical Model vs. AI-Augmented Output</p>
+                            </div>
+                            <div class="flex gap-4">
+                                <div class="flex items-center gap-2">
+                                    <div class="w-3 h-3 bg-slate-600 rounded-sm"></div>
+                                    <span class="font-label-caps text-label-caps text-slate-400">Base Model</span>
+                                </div>
+                                <div class="flex items-center gap-2">
+                                    <div class="w-3 h-3 bg-blue-500 rounded-sm"></div>
+                                    <span class="font-label-caps text-label-caps text-white">AI Augmented</span>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div id="final-forecast-bars" class="h-64 flex items-end justify-around gap-2 px-4 pt-8 pb-2 relative border-b border-slate-800">
+                            <!-- Bars will be generated by JS -->
+                        </div>
+                    </div>
+
+                    <!-- Results Table -->
+                    <div class="col-span-12 bg-surface-container-low border border-outline-variant rounded-lg p-card-padding overflow-hidden">
+                        <div class="border-b border-outline-variant pb-4 mb-4">
+                            <h3 class="font-h3 text-h3 text-white">Impact Assessment Matrix</h3>
+                        </div>
+                        <div class="overflow-x-auto">
+                            <table class="w-full text-left border-collapse">
+                                <thead>
+                                    <tr class="border-b border-slate-700">
+                                        <th class="py-3 px-4 font-label-caps text-label-caps text-slate-400 uppercase tracking-widest w-1/4">Entity</th>
+                                        <th class="py-3 px-4 font-label-caps text-label-caps text-slate-400 uppercase tracking-widest text-right">Base Seats</th>
+                                        <th class="py-3 px-4 font-label-caps text-label-caps text-slate-400 uppercase tracking-widest text-right">AI Swing Impact</th>
+                                        <th class="py-3 px-4 font-label-caps text-label-caps text-slate-400 uppercase tracking-widest text-right">Adjusted Seats</th>
+                                        <th class="py-3 px-4 font-label-caps text-label-caps text-slate-400 uppercase tracking-widest text-right">Updated Range (95% CI)</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="final-forecast-table" class="font-data-md text-data-md text-slate-300">
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="mt-8 pt-8 border-t border-outline-variant flex justify-end">
+                    <button class="px-6 py-3 bg-gradient-to-r from-primary-container to-secondary-container text-white rounded-DEFAULT font-h3 text-h3 flex items-center gap-2 hover:opacity-90 transition-opacity shadow-[0_0_15px_rgba(37,99,235,0.3)]">
+                        <span class="material-symbols-outlined">summarize</span>
+                        Export Final Intelligence Report
+                    </button>
+                </div>
+            </div>
+
+        </div>
+    </main>
+</div>
+
+<!-- Load application logic -->
+<script src="/static/app.js"></script>
+
+</body>
+</html>
